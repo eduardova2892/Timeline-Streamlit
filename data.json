@@ -1,3 +1,88 @@
+    {
+        "proyecto": "SWWB",
+        "tarea": "Calibraci\u00f3n",
+        "consultor": "WSP",
+        "responsable": "Miguel Garc\u00eda",
+        "inicio": "2026-05-04",
+        "deadline": "2026-05-15",
+        "avance": 75.0,
+        "prioridad": "Alta",
+        "comentarios": "Calibraci\u00f3n terminada practicamente, falta conversar sobre el tema de que fraccion del dren basal se capta y cuanta agua se va directo a la Poza de Drenes",
+        "link": "https://angloamerican.sharepoint.com/:f:/r/sites/AAQGobernanzaTcnicadeGestinAR/Shared%20Documents/General/14.%20COORDINACION%20WSP/20260422_Actualizacion_SWWB_2026?csf=1&web=1&e=TXkGuD"
+    },
+    {
+        "proyecto": "WAF",
+        "tarea": "Actualizaci\u00f3n Abril 2026",
+        "consultor": "WSP",
+        "responsable": "Miguel Garc\u00eda",
+        "inicio": "2026-05-12",
+        "deadline": "2026-05-18",
+        "avance": 25.0,
+        "prioridad": "Alta",
+        "comentarios": "",
+        "link": ""
+    },
+    {
+        "proyecto": "WAF",
+        "tarea": "Modulo de Ciclones",
+        "consultor": "WSP",
+        "responsable": "Carlo de Rutte",
+        "inicio": "2026-05-11",
+        "deadline": "2026-05-14",
+        "avance": 0.0,
+        "prioridad": "Alta",
+        "comentarios": "",
+        "link": ""
+    },
+    {
+        "proyecto": "SOWs",
+        "tarea": "Balance de agua y relaves Cortadera",
+        "consultor": "WSP",
+        "responsable": "Miguel Garc\u00eda",
+        "inicio": "2026-05-12",
+        "deadline": "2026-05-15",
+        "avance": 0.0,
+        "prioridad": "Media",
+        "comentarios": "",
+        "link": ""
+    },
+    {
+        "proyecto": "SOWs",
+        "tarea": "Peer Review WAF+",
+        "consultor": "WSP",
+        "responsable": "Miguel Garc\u00eda",
+        "inicio": "2026-05-12",
+        "deadline": "2026-05-15",
+        "avance": 25.0,
+        "prioridad": "Media",
+        "comentarios": "",
+        "link": ""
+    },
+    {
+        "proyecto": "SOWs",
+        "tarea": "Soporte Senior de Gesti\u00f3n de Permisos y acompa\u00f1amiento IGAs",
+        "consultor": "WSP",
+        "responsable": "Miguel Garc\u00eda",
+        "inicio": "2026-05-12",
+        "deadline": "2026-05-15",
+        "avance": 0.0,
+        "prioridad": "Media",
+        "comentarios": "",
+        "link": ""
+    },
+    {
+        "proyecto": "Revisi\u00f3n Docs",
+        "consultor": "WSP",
+        "tarea": "Clim\u00e1tico WES",
+        "subtarea": "",
+        "responsable": "Miguel Garc\u00eda",
+        "prioridad": "Alta",
+        "avance": 50,
+        "inicio": "2026-05-04",
+        "deadline": "2026-05-14",
+        "link": "https://angloamerican.sharepoint.com/:f:/r/sites/AAQGobernanzaTcnicadeGestinAR/Shared%20Documents/General/14.%20COORDINACION%20WSP/260302_Revisi%C3%B3n_WES?csf=1&web=1&e=KlLWV1"
+    }
+=======
 [
     {
         "proyecto": "SWWB",
@@ -83,4 +168,5 @@
         "deadline": "2026-05-14",
         "link": "https://angloamerican.sharepoint.com/:f:/r/sites/AAQGobernanzaTcnicadeGestinAR/Shared%20Documents/General/14.%20COORDINACION%20WSP/260302_Revisi%C3%B3n_WES?csf=1&web=1&e=KlLWV1"
     }
+>>>>>>> 89223537184fd0e8a7e0a2d902b89c2d9cd4b5af
 ]
