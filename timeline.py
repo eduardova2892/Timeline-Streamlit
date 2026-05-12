@@ -148,71 +148,118 @@ else:
 from datetime import datetime
 
 st.subheader("📅 Timeline de tareas")
-# =========================
-# 🔹 FILTRO DE FECHAS
-# =========================
-col1, col2 = st.columns(2)
 
-with col1:
-    fecha_inicio = st.date_input("Desde", value=df["inicio"].min())
-
-with col2:
-    fecha_fin = st.date_input("Hasta", value=df["deadline"].max())
 if len(data) > 0:
 
+    # =========================
+    # 🔹 DATAFRAME BASE
+    # =========================
     df = pd.DataFrame(data)
 
-    # =========================
-    # 🔹 FORMATO DE FECHAS
-    # =========================
     df["inicio"] = pd.to_datetime(df["inicio"], errors="coerce")
     df["deadline"] = pd.to_datetime(df["deadline"], errors="coerce")
 
-    # ✅ aplicar filtro
-    fecha_inicio = pd.to_datetime(fecha_inicio)
-    fecha_fin = pd.to_datetime(fecha_fin)
+    df = df.dropna(subset=["inicio", "deadline"])
 
-    df = df[
-        (df["deadline"] >= fecha_inicio) &
-        (df["inicio"] <= fecha_fin)
+    # =========================
+    # 🔹 RANGO REAL
+    # =========================
+    min_fecha = df["inicio"].min().date()
+    max_fecha = df["deadline"].max().date()
+
+    # =========================
+    # 🔹 SESSION STATE (CLAVE)
+    # =========================
+    if "fecha_inicio" not in st.session_state:
+        st.session_state.fecha_inicio = min_fecha
+
+    if "fecha_fin" not in st.session_state:
+        st.session_state.fecha_fin = max_fecha
+
+    # =========================
+    # 🔹 SELECTORES
+    # =========================
+    col1, col2 = st.columns(2)
+
+    with col1:
+        fecha_inicio_input = st.date_input(
+            "Desde",
+            value=st.session_state.fecha_inicio,
+            min_value=min_fecha,
+            max_value=max_fecha,
+            key="filtro_inicio"
+        )
+
+    with col2:
+        fecha_fin_input = st.date_input(
+            "Hasta",
+            value=st.session_state.fecha_fin,
+            min_value=min_fecha,
+            max_value=max_fecha,
+            key="filtro_fin"
+        )
+
+    # ✅ actualizar session_state
+    st.session_state.fecha_inicio = fecha_inicio_input
+    st.session_state.fecha_fin = fecha_fin_input
+
+    # =========================
+    # 🔹 BOTÓN 30 DÍAS
+    # =========================
+    if st.button("Últimos 30 días"):
+        st.session_state.fecha_fin = max_fecha
+        st.session_state.fecha_inicio = max_fecha - pd.Timedelta(days=30)
+
+    # =========================
+    # 🔹 FILTRO CORRECTO
+    # =========================
+    df_filtrado = df[
+        (df["deadline"].dt.date >= st.session_state.fecha_inicio) &
+        (df["inicio"].dt.date <= st.session_state.fecha_fin)
     ]
-    # =========================
-    # 🔹 ESTADO (CRÍTICO / NORMAL)
-    # =========================
-    hoy_pd = pd.to_datetime(datetime.today())
-
-    df["dias_restantes"] = (df["deadline"] - hoy_pd).dt.days
-
-    def estado_tarea(row):
-        if row["dias_restantes"] <= 3 and row["avance"] < 100:
-            return "Crítica"
-        else:
-            return "Normal"
-
-    df["estado"] = df.apply(estado_tarea, axis=1)
 
     # =========================
-    # 🔹 ORDENAR
+    # 🔹 VALIDACIÓN
     # =========================
-    df = df.sort_values(by=["proyecto", "inicio"]).reset_index(drop=True)
+    if df_filtrado.empty:
+        st.warning("No hay tareas en ese rango de fechas")
 
-    # =========================
-    # 🔹 FORMATO VISUAL PROYECTO → TAREA
-    # =========================
-    labels = []
-    proyecto_anterior = None
+    else:
+        df = df_filtrado
 
-    for _, row in df.iterrows():
-        if row["proyecto"] != proyecto_anterior:
-            label = "📁 " + row["proyecto"].upper() + "\n   └─ " + row["tarea"]
-            proyecto_anterior = row["proyecto"]
-        else:
-            label = "   └─ " + row["tarea"]
+        # =========================
+        # 🔹 ESTADO
+        # =========================
+        hoy_pd = pd.to_datetime(datetime.today())
 
-        labels.append(label)
+        df["dias_restantes"] = (df["deadline"] - hoy_pd).dt.days
 
-    df["proyecto_tarea"] = labels
+        df["estado"] = df.apply(
+            lambda row: "Crítica" if row["dias_restantes"] <= 3 and row["avance"] < 100 else "Normal",
+            axis=1
+        )
 
+        # =========================
+        # 🔹 ORDENAR
+        # =========================
+        df = df.sort_values(by=["proyecto", "inicio"]).reset_index(drop=True)
+
+        # =========================
+        # 🔹 LABELS
+        # =========================
+        labels = []
+        proyecto_anterior = None
+
+        for _, row in df.iterrows():
+            if row["proyecto"] != proyecto_anterior:
+                label = "📁 " + row["proyecto"].upper() + "\n   └─ " + row["tarea"]
+                proyecto_anterior = row["proyecto"]
+            else:
+                label = "   └─ " + row["tarea"]
+
+            labels.append(label)
+
+        df["proyecto_tarea"] = labels
     # =========================
     # 🔹 POSICIONES PARA LÍNEAS DE SEPARACIÓN
     # =========================
@@ -232,6 +279,10 @@ if len(data) > 0:
         y="proyecto_tarea",
         color="avance",
         color_continuous_scale="RdYlGn"
+    )
+
+    fig.update_xaxes(
+        range=[st.session_state.fecha_inicio, st.session_state.fecha_fin]
     )
 
     # ✅ Escala fija 0–100
