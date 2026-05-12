@@ -148,7 +148,16 @@ else:
 from datetime import datetime
 
 st.subheader("📅 Timeline de tareas")
+# =========================
+# 🔹 FILTRO DE FECHAS
+# =========================
+col1, col2 = st.columns(2)
 
+with col1:
+    fecha_inicio = st.date_input("Desde", value=df["inicio"].min())
+
+with col2:
+    fecha_fin = st.date_input("Hasta", value=df["deadline"].max())
 if len(data) > 0:
 
     df = pd.DataFrame(data)
@@ -159,6 +168,14 @@ if len(data) > 0:
     df["inicio"] = pd.to_datetime(df["inicio"], errors="coerce")
     df["deadline"] = pd.to_datetime(df["deadline"], errors="coerce")
 
+    # ✅ aplicar filtro
+    fecha_inicio = pd.to_datetime(fecha_inicio)
+    fecha_fin = pd.to_datetime(fecha_fin)
+
+    df = df[
+        (df["deadline"] >= fecha_inicio) &
+        (df["inicio"] <= fecha_fin)
+    ]
     # =========================
     # 🔹 ESTADO (CRÍTICO / NORMAL)
     # =========================
