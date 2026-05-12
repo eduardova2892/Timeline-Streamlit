@@ -446,13 +446,18 @@ if len(data) > 0:
         updated_docs = edited_docs.copy()
         full_df = pd.DataFrame(data)
 
-        # Asegurar columna
+        # ✅ asegurar columnas
         if "comentarios" not in full_df.columns:
             full_df["comentarios"] = ""
 
-        # ✅ actualizar SOLO esos campos
-        full_df["comentarios"] = updated_docs["comentarios"]
-        full_df["link"] = updated_docs["link"]
+        if "link" not in full_df.columns:
+            full_df["link"] = ""
+
+        # ✅ actualizar fila por fila (seguro)
+        for i in range(len(updated_docs)):
+            if i < len(full_df):
+                full_df.at[i, "comentarios"] = updated_docs.at[i, "comentarios"]
+                full_df.at[i, "link"] = updated_docs.at[i, "link"]
 
         save_data(full_df.to_dict(orient="records"))
 
@@ -461,11 +466,12 @@ if len(data) > 0:
 st.subheader("🔗 Acceso directo a documentos")
 
 for i, row in df_docs.iterrows():
-    if row["link"]:
 
-        link = row["link"]
+    link = str(row.get("link", "")).strip()
 
-        # ✅ convertir rutas locales en formato válido
+    if link != "" and link.lower() != "nan":
+
+        # ✅ convertir rutas locales
         if link.startswith("C:"):
             link = "file:///" + link.replace("\\", "/")
 
