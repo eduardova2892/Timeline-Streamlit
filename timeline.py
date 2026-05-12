@@ -308,6 +308,20 @@ if len(data) > 0:
                 showlegend=False
             )
 
+# ✅ MARCAR TAREAS COMPLETADAS
+
+    for _, row in df.iterrows():
+        if row["avance"] == 100:
+            fig.add_scatter(
+                x=[row["deadline"]],
+                y=[row["proyecto_tarea"]],
+                mode="text",
+                text=["✅ Completado"],
+                textposition="middle right",
+                showlegend=False
+            )
+
+
     # =========================
     # 🎨 ESTILO FINAL
     # =========================
