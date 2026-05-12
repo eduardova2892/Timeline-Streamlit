@@ -34,44 +34,44 @@ data = load_data()
 # ======================
 # Formulario de ingreso
 # ======================
-st.subheader("➕ Nueva tarea")
+with st.expander("➕ Nueva tarea", expanded=False):
 
-with st.form("task_form"):
+    with st.form("task_form"):
 
-    proyecto = st.text_input("Proyecto")
-    consultor = st.text_input("Consultor")
-    tarea = st.text_input("Tarea")
-    subtarea = st.text_input("Subtarea (opcional)")
+        proyecto = st.text_input("Proyecto")
+        consultor = st.text_input("Consultor")
+        tarea = st.text_input("Tarea")
+        subtarea = st.text_input("Subtarea (opcional)")
 
-    responsable = st.text_input("Responsable")
+        responsable = st.text_input("Responsable")
 
-    prioridad = st.selectbox("Prioridad", ["Alta", "Media", "Baja"])
+        prioridad = st.selectbox("Prioridad", ["Alta", "Media", "Baja"])
 
-    avance = st.slider("Avance (%)", 0, 100, 0)
-    inicio = st.date_input("Fecha inicio", value=date.today())
-    deadline = st.date_input("Fecha límite", value=date.today())
-    link = st.text_input("Ruta o link documento")
+        avance = st.slider("Avance (%)", 0, 100, 0)
+        inicio = st.date_input("Fecha inicio")
+        deadline = st.date_input("Fecha límite")
 
-    # ✅ ESTE BOTÓN DEBE ESTAR AQUÍ DENTRO
-    submitted = st.form_submit_button("Guardar")
+        link = st.text_input("Ruta o link documento")
 
-    if submitted:
-        nueva_tarea = {
-            "proyecto": proyecto,
-            "consultor": consultor,
-            "tarea": tarea,
-            "subtarea": subtarea,
-            "responsable": responsable,
-            "prioridad": prioridad,
-            "avance": avance,
-            "inicio": str(inicio),
-            "deadline": str(deadline),
-            "link": link
-        }
+        submitted = st.form_submit_button("Guardar")
 
-        data.append(nueva_tarea)
-        save_data(data)
-        st.success("Tarea agregada ✅")
+        if submitted:
+            nueva_tarea = {
+                "proyecto": proyecto,
+                "consultor": consultor,
+                "tarea": tarea,
+                "subtarea": subtarea,
+                "responsable": responsable,
+                "prioridad": prioridad,
+                "avance": avance,
+                "inicio": str(inicio),
+                "deadline": str(deadline),
+                "link": link
+            }
+
+            data.append(nueva_tarea)
+            save_data(data)
+            st.success("Tarea agregada ✅")
 
 # ======================
 # Mostrar tabla
@@ -106,9 +106,13 @@ if len(data) > 0:
     df["deadline"] = pd.to_datetime(df["deadline"], errors="coerce").dt.date
 
     # Editor tipo Excel
+
+    df = df.sort_values(by="proyecto")
+    df = df.reset_index(drop=True)
     edited_df = st.data_editor(
     df,
     use_container_width=True,
+    hide_index=True,
     num_rows="dynamic",   # 🔥 clave → permite borrar filas
     column_config={
         "inicio": st.column_config.DateColumn("Fecha inicio"),
