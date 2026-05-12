@@ -446,14 +446,12 @@ if len(data) > 0:
         updated_docs = edited_docs.copy()
         full_df = pd.DataFrame(data)
 
-        # ✅ asegurar columnas
         if "comentarios" not in full_df.columns:
             full_df["comentarios"] = ""
 
         if "link" not in full_df.columns:
             full_df["link"] = ""
 
-        # ✅ actualizar fila por fila (seguro)
         for i in range(len(updated_docs)):
             if i < len(full_df):
                 full_df.at[i, "comentarios"] = updated_docs.at[i, "comentarios"]
