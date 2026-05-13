@@ -448,23 +448,23 @@ if len(data) > 0:
 
     df_docs = df_docs[columnas_docs]
 
-    # ✅ Editor SOLO para comentarios y links
-    edited_docs = st.data_editor(
-        df_docs,
-        use_container_width=True,
-        column_config={
-            "link": st.column_config.TextColumn("Ruta / Link documento"),
-            "comentarios": st.column_config.TextColumn("Comentarios"),
-        }
-    )
-    
-#guardar cambios
+# ✅ Editor SOLO para comentarios y links
+edited_docs = st.data_editor(
+    df_docs,
+    use_container_width=True,
+    column_config={
+        "link": st.column_config.TextColumn("Ruta / Link documento"),
+        "comentarios": st.column_config.TextColumn("Comentarios"),
+    }
+)
+
+# ✅ GUARDAR (TODO VA DENTRO DEL BOTÓN)
 if st.button("💾 Guardar comentarios / links"):
 
-    # ✅ crear copia correctamente
+    # ✅ aquí se define correctamente
     updated_docs = edited_docs.copy()
 
-    # ✅ cargar data original
+    # ✅ data original
     merged_df = pd.DataFrame(data)
 
     # ✅ asegurar columnas
@@ -472,7 +472,7 @@ if st.button("💾 Guardar comentarios / links"):
         if col not in merged_df.columns:
             merged_df[col] = ""
 
-    # ✅ actualizar filas correctamente
+    # ✅ actualizar correctamente
     for _, row in updated_docs.iterrows():
 
         mask = (
@@ -481,14 +481,20 @@ if st.button("💾 Guardar comentarios / links"):
             (merged_df["responsable"] == row["responsable"])
         )
 
-        merged_df.loc[mask, "comentarios"] = row["comentarios"]
-        merged_df.loc[mask, "link"] = row["link"]
+        comentario = str(row.get("comentarios", "")).strip()
+        link = str(row.get("link", "")).strip()
+
+        if comentario and comentario.lower() != "nan":
+            merged_df.loc[mask, "comentarios"] = comentario
+
+        if link and link.lower() != "nan":
+            merged_df.loc[mask, "link"] = link
 
     # ✅ guardar
     save_data(merged_df.to_dict(orient="records"))
 
     st.success("Comentarios y links guardados correctamente ✅")
-
+    
 st.subheader("🔗 Acceso directo a documentos")
 
 for i, row in df_docs.iterrows():
