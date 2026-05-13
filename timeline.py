@@ -245,8 +245,13 @@ if len(data) > 0:
     # =========================
     # 🔹 VALIDACIÓN
     # =========================
-    if df_filtrado.empty:
+    
+    df = df_filtrado.copy()
+
+    if df.empty:
         st.warning("No hay tareas en ese rango de fechas")
+        st.stop()   # ✅ corta ejecución
+
 
     else:
         df = df_filtrado
