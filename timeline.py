@@ -65,7 +65,7 @@ with st.expander("➕ Nueva tarea", expanded=False):
                 "avance": avance,
                 "inicio": str(inicio),
                 "deadline": str(deadline),
-                "link": link,
+                "link": link.strip(),
                 "comentarios": ""   # ✅ importante agregar
             }
 
@@ -481,10 +481,10 @@ if st.button("💾 Guardar comentarios / links"):
     for _, row in updated_docs.iterrows():
 
         mask = (
-            (merged_df["proyecto"] == row["proyecto"]) &
-            (merged_df["tarea"] == row["tarea"]) &
-            (merged_df["responsable"] == row["responsable"])
-        )
+    (merged_df["proyecto"].astype(str).str.strip() == str(row["proyecto"]).strip()) &
+    (merged_df["tarea"].astype(str).str.strip() == str(row["tarea"]).strip()) &
+    (merged_df["responsable"].astype(str).str.strip() == str(row["responsable"]).strip())
+)
 
         comentario = str(row.get("comentarios", "")).strip()
         link = str(row.get("link", "")).strip()
@@ -492,8 +492,10 @@ if st.button("💾 Guardar comentarios / links"):
         if comentario and comentario.lower() != "nan":
             merged_df.loc[mask, "comentarios"] = comentario
 
-        if link and link.lower() != "nan":
+        
+        if link.lower() != "nan":
             merged_df.loc[mask, "link"] = link
+
 
     # ✅ guardar
     save_data(merged_df.to_dict(orient="records"))
