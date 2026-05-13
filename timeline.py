@@ -8,7 +8,6 @@ import pandas as pd
 import plotly.express as px
 
 
-
 DATA_FILE = "data.json"
 
 # ======================
@@ -146,6 +145,26 @@ else:
 # =========================
 
 from datetime import datetime
+
+#ECHARTS BLOQUE (TEST)
+
+echart_data = []
+
+for i, row in df.iterrows():
+    echart_data.append({
+        "name": row["tarea"],
+        "value": [
+            i,
+            str(row["inicio"]),
+            str(row["deadline"]),
+            row["avance"]
+        ],
+        "itemStyle": {
+            "color": "#00c853" if row["avance"] == 100 else "#ff9800" if row["avance"] > 50 else "#d32f2f"
+        }
+    })
+
+
 
 st.subheader("📅 Timeline de tareas")
 
