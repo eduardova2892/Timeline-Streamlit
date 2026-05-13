@@ -65,12 +65,17 @@ with st.expander("➕ Nueva tarea", expanded=False):
                 "avance": avance,
                 "inicio": str(inicio),
                 "deadline": str(deadline),
-                "link": link
+                "link": link,
+                "comentarios": ""   # ✅ importante agregar
             }
 
             data.append(nueva_tarea)
             save_data(data)
+
             st.success("Tarea agregada ✅")
+
+            # ✅ 🔥 CLAVE: recargar app
+            st.rerun()
 
 # ======================
 # Mostrar tabla
@@ -494,7 +499,7 @@ if st.button("💾 Guardar comentarios / links"):
     save_data(merged_df.to_dict(orient="records"))
 
     st.success("Comentarios y links guardados correctamente ✅")
-    
+
 st.subheader("🔗 Acceso directo a documentos")
 
 for i, row in df_docs.iterrows():
