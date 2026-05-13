@@ -458,27 +458,36 @@ if len(data) > 0:
         }
     )
     
+#guardar cambios
+if st.button("💾 Guardar comentarios / links"):
 
-    # ✅ Guardar cambios
-    if st.button("💾 Guardar comentarios / links"):
+    # ✅ crear copia correctamente
+    updated_docs = edited_docs.copy()
 
-        updated_docs = edited_docs.copy()
-        full_df = pd.DataFrame(data)
+    # ✅ cargar data original
+    merged_df = pd.DataFrame(data)
 
-        if "comentarios" not in full_df.columns:
-            full_df["comentarios"] = ""
+    # ✅ asegurar columnas
+    for col in ["comentarios", "link"]:
+        if col not in merged_df.columns:
+            merged_df[col] = ""
 
-        if "link" not in full_df.columns:
-            full_df["link"] = ""
+    # ✅ actualizar filas correctamente
+    for _, row in updated_docs.iterrows():
 
-        for i in range(len(updated_docs)):
-            if i < len(full_df):
-                full_df.at[i, "comentarios"] = updated_docs.at[i, "comentarios"]
-                full_df.at[i, "link"] = updated_docs.at[i, "link"]
+        mask = (
+            (merged_df["proyecto"] == row["proyecto"]) &
+            (merged_df["tarea"] == row["tarea"]) &
+            (merged_df["responsable"] == row["responsable"])
+        )
 
-        save_data(full_df.to_dict(orient="records"))
+        merged_df.loc[mask, "comentarios"] = row["comentarios"]
+        merged_df.loc[mask, "link"] = row["link"]
 
-        st.success("Comentarios y links actualizados ✅")
+    # ✅ guardar
+    save_data(merged_df.to_dict(orient="records"))
+
+    st.success("Comentarios y links guardados correctamente ✅")
 
 st.subheader("🔗 Acceso directo a documentos")
 
